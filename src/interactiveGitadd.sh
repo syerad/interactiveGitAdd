@@ -10,7 +10,6 @@ choice () {
     else
         opts[choice]=*
     fi
-  # if [[ ${options} ]]
 }
 
 addToGit() {
@@ -41,7 +40,6 @@ createmenu ()
     if [ "$REPLY" -eq "$(($#))" ];
     then
       echo "Exiting..."
-      # echo "Chosen files: ${chosenOptions[@]}"
       break;
     elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $(($#)) ];
     then
