@@ -4,6 +4,7 @@ Auf Branch master
   (benutzen Sie "git checkout -- <Datei>...", um die Änderungen im Arbeitsverzeichnis zu verwerfen)
 
     geändert:               .gitconfig
+    geändert:               .sdfdsf
     geändert:               .gitignore
     geändert:               .zshrc
 

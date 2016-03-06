@@ -1,67 +1,74 @@
 #!/bin/bash
-# Purpose: Demonstrate usage of select and case with toggleable flags to indicate choices
-# 2013-05-10 - Dennis Williamson
+# @TODO: duplicate files in list if files are in staging area and also modified
+# @TODO: support for english language
 
 choice () {
-    local choice=$1
+  local choice=$1
     if [[ ${opts[choice]} ]] # toggle
     then
         opts[choice]=
     else
-        opts[choice]=+
+        opts[choice]=*
     fi
+  # if [[ ${options} ]]
 }
 
-parseGitStatus () {
-    status=`git status`
-    # testfile=`sed '/^U/d' ./testfile.txt`
-    # echo "$status"
-    testfile=` echo "$status" | sed -n -E -e 's/geändert\:\s*(\S*)/\1/p' `
-    # rows =
-    echo "$testfile"
+addToGit() {
+  for file in "${!chosenOptions[@]}"
+  do
+    git add $file
+  done
 }
-# choice
+
+status=`git status`
+declare -A chosenOptions
+
+parseGitStatus () {
+    # testfile=` echo "$status" | sed -n -E 's/[ \t]+geändert\:[ \t]+([a-zA-Z0-9.]+)/\1/p' `
+    # alternative way: git status|grep geänd|awk '{print $2}'
+    rows=` echo "$status"| grep geänd|awk '{print $2}' `
+    options=()
+    for opt in $rows
+    do
+      options+=("$opt")
+    done
+    options+=("done")
+}
+createmenu ()
+{
+  PS3='Please enter your choice: '
+  select option; do # in "$@" is the default
+    if [ "$REPLY" -eq "$(($#))" ];
+    then
+      echo "Exiting..."
+      # echo "Chosen files: ${chosenOptions[@]}"
+      break;
+    elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $(($#)) ];
+    then
+      if [[ ${#chosenOptions[@]} -gt 0 ]]
+      then
+        for file in "${!chosenOptions[@]}"
+        do
+          if [[ ${options[$REPLY-1]} == ${chosenOptions[$file]} ]]
+          then
+            unset chosenOptions[${options[$REPLY-1]}]
+            break;
+          else
+            test ! ${chosenOptions[${options[$REPLY-1]}]+_} && chosenOptions[${options[$REPLY-1]}]=${options[$REPLY-1]}
+          fi
+        done
+      else
+        chosenOptions[${options[$REPLY-1]}]=${options[$REPLY-1]}
+      fi
+      echo "Chosen files: ${chosenOptions[@]}"
+    else
+      echo "Incorrect Input: Select a number 1-$#"
+    fi
+  done
+
+  echo "Files chosen: ${chosenOptions[@]}"
+}
+
 parseGitStatus
-# status = $(git status)
-# echo "$status"
-# parseGitStatus
-# PS3='Please enter your choice: '
-# while :
-# do
-#     clear
-#     options=("Option 1 ${opts[1]}" "Option 2 ${opts[2]}" "Option 3 ${opts[3]}" "Done")
-#     select opt in "${options[@]}"
-#     do
-#         case $opt in
-#             "Option 1 ${opts[1]}")
-#                 choice 1
-#                 break
-#                 ;;
-#             "Option 2 ${opts[2]}")
-#                 choice 2
-#                 break
-#                 ;;
-#             "Option 3 ${opts[3]}")
-#                 choice 3
-#                 break
-#                 ;;
-#             "Option 4 ${opts[4]}")
-#                 choice 4
-#                 break
-#                 ;;
-#             "Done")
-#                 break 2
-#                 ;;
-#             *) printf '%s\n' 'invalid option';;
-#         esac
-#     done
-# done
-#
-# printf '%s\n' 'Options chosen:'
-# for opt in "${!opts[@]}"
-# do
-#     if [[ ${opts[opt]} ]]
-#     then
-#         printf '%s\n' "Option $opt"
-#     fi
-# done
+createmenu "${options[@]}"
+addToGit
