@@ -1,4 +1,4 @@
-### Interactivegitadd
+# Interactivegitadd
 
 ## Installation
 Clone the repository:
