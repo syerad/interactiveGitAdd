@@ -12,7 +12,7 @@ Make the executable accessible from every path
 or add the `interactiveGitadd/build` folder to your `PATH`
 
 If the binary is not working properly for your system
-try to run the `interactiveGitadd.sh` from the src folder instead of using the binary.
+try to run the `interactiveGitadd.sh` from the src folder.
 
 ## Usage
 
