@@ -20,5 +20,5 @@ Use the command `interactiveGitAdd` within a git repository. Then a select box w
 Select an item by pressing the appropriate number shown in the menu. This will toggle the chosen file. Choosing the option `Done` will finish the the selection and all selected items will be added to the staging area.
 
 ## Todo
-Mutlilanguage support
-Build version for different kind of systems (currently the build is only workin on debian system)
+- Mutlilanguage support
+- Build version for different kind of systems (currently the build is only workin on debian system)
