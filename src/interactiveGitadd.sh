@@ -19,13 +19,13 @@ addToGit() {
   done
 }
 
-status=`git status`
+status=`git status -s`
 declare -A chosenOptions
 
 parseGitStatus () {
     # testfile=` echo "$status" | sed -n -E 's/[ \t]+geändert\:[ \t]+([a-zA-Z0-9.]+)/\1/p' `
     # alternative way: git status|grep geänd|awk '{print $2}'
-    rows=` echo "$status"| grep geänd|awk '{print $2}' `
+    rows=` echo "$status"| grep 'M\|??'|awk '{print $2}' `
     options=()
     for opt in $rows
     do
